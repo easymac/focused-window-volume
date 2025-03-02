@@ -23,71 +23,19 @@ extern "system" fn keyboard_hook_proc(code: i32, wparam: WPARAM, lparam: LPARAM)
             match kb_struct.vkCode {
                 VK_VOLUME_UP => {
                     if wparam.0 == WM_KEYDOWN as usize {
-                        println!("Volume Up key pressed");
-
-                        match focus::get_focused_window_details() {
-                            Ok((pid, process_path)) => {
-                                match audio::get_session_by_process_path(&process_path) {
-                                    Ok(session) => {
-                                        println!("Session: {:?}", session);
-                                        match audio::get_session_volume(&session) {
-                                            Ok(volume) => {
-                                                println!("Volume: {}", volume);
-                                                let new_volume = volume + 0.02;
-                                                let new_volume = if new_volume > 1.0 { 1.0 } else { new_volume };
-                                                match audio::set_session_volume(&session, new_volume) {
-                                                    Ok(_) => println!("Volume set to: {}", new_volume),
-                                                    Err(e) => println!("Error setting volume: {:?}", e)
-                                                }
-                                            }
-                                            Err(e) => println!("Error getting session volume: {:?}", e)
-                                        }
-                                    }
-                                    Err(e) => println!("Error getting audio session: {:?}", e)
-                                }
-                            }
-                            Err(e) => {
-                                println!("Error getting focused window details: {:?}", e);
-                            }
-                        }
+                        handle_volume_up();
                         return LRESULT(1); // Prevent default behavior
                     }
                 },
                 VK_VOLUME_DOWN => {
                     if wparam.0 == WM_KEYDOWN as usize {
-                        println!("Volume Down key pressed");
-                        match focus::get_focused_window_details() {
-                            Ok((pid, process_path)) => {
-                                match audio::get_session_by_process_path(&process_path) {
-                                    Ok(session) => {
-                                        println!("Session: {:?}", session);
-                                        match audio::get_session_volume(&session) {
-                                            Ok(volume) => {
-                                                println!("Volume: {}", volume);
-                                                let new_volume = volume - 0.02;
-                                                let new_volume = if new_volume < 0.0 { 0.0 } else { new_volume };
-                                                match audio::set_session_volume(&session, new_volume) {
-                                                    Ok(_) => println!("Volume set to: {}", new_volume),
-                                                    Err(e) => println!("Error setting volume: {:?}", e)
-                                                }
-                                            }
-                                            Err(e) => println!("Error getting session volume: {:?}", e)
-                                        }
-                                    }
-                                    Err(e) => println!("Error getting audio session: {:?}", e)
-                                }
-                            }
-                            Err(e) => {
-                                println!("Error getting focused window details: {:?}", e);
-                            }
-                        }
+                        handle_volume_down();
                         return LRESULT(1); // Prevent default behavior
                     }
                 },
                 VK_VOLUME_MUTE => {
                     if wparam.0 == WM_KEYDOWN as usize {
-                        println!("Volume Mute key pressed");
-                        // In the future, we'll handle mute here
+                        handle_volume_mute();
                         return LRESULT(1); // Prevent default behavior
                     }
                 },
@@ -128,3 +76,29 @@ pub fn uninstall_keyboard_hook() -> Result<(), Box<dyn std::error::Error>> {
     }
     Ok(())
 } 
+
+
+fn handle_volume_up() {
+    match focus::get_focused_window_session() {
+        Ok(session) => {
+            audio::increment_session_volume(&session, 0.02).unwrap();
+        }
+        Err(e) => println!("Error getting focused window session: {:?}", e)
+    }
+}
+
+fn handle_volume_down() {
+    match focus::get_focused_window_session() {
+        Ok(session) => {
+            audio::decrement_session_volume(&session, 0.02).unwrap();
+        }
+        Err(e) => println!("Error getting focused window session: {:?}", e)
+    }
+}
+
+fn handle_volume_mute() {
+    match focus::get_focused_window_session() {
+        Ok(session) => audio::toggle_session_mute(&session).unwrap(),
+        Err(e) => println!("Error getting focused window session: {:?}", e)
+    }
+}

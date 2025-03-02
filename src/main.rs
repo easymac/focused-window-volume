@@ -7,12 +7,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Install keyboard hook to capture volume keys
     keyboard::install_keyboard_hook()?;
     
-    // Test getting the focused window
-    focus::get_focused_window()?;
-
-    // Enumerate audio sessions
-    audio::enumerate_audio_sessions()?;
-    
     // Set up system tray
     let tray = tray::Tray::new("Focused Window Volume")?;
     println!("Tray application started. Check your system tray!");

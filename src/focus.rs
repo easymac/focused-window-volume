@@ -8,6 +8,8 @@ use windows::Win32::System::Threading::*;
 use windows::core::PWSTR;
 use windows::Win32::Foundation::CloseHandle;
 
+use crate::audio;
+
 pub fn get_focused_window() -> Result<(), Box<dyn std::error::Error>> {
     unsafe {
         // Get handle to the foreground window
@@ -98,5 +100,13 @@ pub fn get_process_path(pid: u32) -> Result<String, Box<dyn std::error::Error>> 
         let path = String::from_utf16_lossy(&buffer[..size as usize]);
         
         Ok(path)
+    }
+}
+
+pub fn get_focused_window_session() -> Result<windows::Win32::Media::Audio::IAudioSessionControl2, Box<dyn std::error::Error>> {
+    unsafe {
+        let (pid, process_path) = get_focused_window_details()?;
+        let session = audio::get_session_by_process_path(&process_path)?;
+        Ok(session)
     }
 }
