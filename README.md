@@ -1,5 +1,5 @@
 # focused-window-volume
-(Windows) Enhanced keyboard volume control that redirects volume adjustments to the focused application instead of system volume.
+(Windows) Enhanced keyboard volume control that redirects media key volume adjustments to the focused application instead of system volume.
 
 ## Build Instructions
 
