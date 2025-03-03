@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 mod tray;
 mod keyboard;
 mod focus;
