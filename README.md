@@ -33,26 +33,28 @@ The application will be built in the `target/release` directory. You can:
    - Press `Win+R`, type `shell:startup` and press Enter
    - Create a shortcut to the executable in this folder
 
-### Configuration
-- Right-click the system tray icon to access settings and configuration options
+### Usage
 - Volume keys should automatically be captured once the application is running
 - To exit the application, right-click the system tray icon and select "Exit"
-
-## Troubleshooting
-- If media keys aren't being captured, ensure no other application is consuming these events
-- Make sure you're running the application with sufficient privileges
-- Check the Windows event logs if the application fails to start
 
 
 ## Implementation notes
 
 For applications that use multi-process achitecture (e.g. Google Chrome), the process (and PID) which is associated with a window will often be different from the process (and PID) which is associated with a session.
 
-As a heuristic, the path of the executable is resolved and used to identify processes instead of PIDs in order to match the window's process with the audio session.
+As a heuristic, the path of the executable is used to identify application groups instead of process IDs in order to match the focused window with the audio session.
 
 For now, we're going to evaluate the practical reliability of this heuristic and then consider other approaches if there are problems.
 
 All suggested solutions are very welcome & appreciated to be filed as issues.
+
+## Contributing
+
+Thank you for thinking about helping out with the project!
+
+All bug reports, suggestions, feedback, and ideas are welcome & appreciated as Issues. Pull requests are very welcome!
+
+Code review PRs are especially welcome 🔥
 
 
 ## License
