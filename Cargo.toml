@@ -1,7 +1,12 @@
 [package]
 name = "focused-window-volume"
 version = "0.1.0"
+authors = ["Mac Carrithers <mac@ezm.ac>"]
 edition = "2024"
+description = "Enhanced keyboard volume control that redirects volume adjustments to the focused application instead of system-wide settings."
+readme = "README.md"
+repository = "https://github.com/easymac/focused-window-volume"
+license = "MIT"
 
 [dependencies]
 windows = { version = "0.51.1", features = [
