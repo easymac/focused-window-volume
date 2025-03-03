@@ -1,5 +1,5 @@
 # focused-window-volume
-(Windows) Remap your keyboard volume controls to target your focused window instead of system volume
+(Windows) Enhanced keyboard volume control that redirects volume adjustments to the focused application instead of system volume.
 
 ## Build Instructions
 
