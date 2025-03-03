@@ -11,11 +11,9 @@ use windows::Win32::Graphics::Gdi::*;
 use windows::Win32::System::LibraryLoader::GetModuleHandleW;
 
 const WM_APP_NOTIFY: u32 = WM_APP + 1;
-const IDM_PRINT: u32 = 1000;
 const IDM_EXIT: u32 = 1001;
 
 pub enum TrayEvent {
-    Print,
     Quit,
 }
 
@@ -132,9 +130,6 @@ impl Tray {
                 
                 // Check for events from the channel
                 match self.rx.try_recv() {
-                    Ok(TrayEvent::Print) => {
-                        println!("Tray item clicked!");
-                    },
                     Ok(TrayEvent::Quit) => {
                         println!("Quitting application...");
                         break;
@@ -224,7 +219,6 @@ extern "system" fn window_proc(hwnd: HWND, msg: u32, wparam: WPARAM, lparam: LPA
                     WM_CONTEXTMENU | WM_RBUTTONUP => {
                         // Show context menu
                         let hmenu = CreatePopupMenu().unwrap();
-                        AppendMenuW(hmenu, MENU_ITEM_FLAGS(0), IDM_PRINT as usize, w!("Print Message")).unwrap();
                         AppendMenuW(hmenu, MENU_ITEM_FLAGS(0), IDM_EXIT as usize, w!("Quit")).unwrap();
                         
                         // Get cursor position
@@ -253,15 +247,6 @@ extern "system" fn window_proc(hwnd: HWND, msg: u32, wparam: WPARAM, lparam: LPA
             WM_COMMAND => {
                 let wmid = LOWORD(wparam.0 as u32);
                 match wmid {
-                    IDM_PRINT => {
-                        if !tx_ptr.is_null() {
-                            let tx = &*tx_ptr;
-                            if let Err(e) = tx.send(TrayEvent::Print) {
-                                eprintln!("Failed to send print event: {}", e);
-                            }
-                        }
-                        LRESULT(0)
-                    },
                     IDM_EXIT => {
                         if !tx_ptr.is_null() {
                             let tx = &*tx_ptr;
