@@ -55,7 +55,7 @@ pub fn get_session_by_process_path(process_path: &str) -> Result<IAudioSessionCo
 /// Gets the master volume level for a specific audio session
 /// 
 /// Returns a float between 0.0 (muted) and 1.0 (full volume)
-fn get_session_volume(session_control: &IAudioSessionControl2) -> Result<f32, Box<dyn std::error::Error>> {
+pub fn get_session_volume(session_control: &IAudioSessionControl2) -> Result<f32, Box<dyn std::error::Error>> {
     unsafe {
         // Get the simple audio volume interface from the session control
         let simple_audio_volume: ISimpleAudioVolume = session_control.cast()?;
@@ -67,7 +67,7 @@ fn get_session_volume(session_control: &IAudioSessionControl2) -> Result<f32, Bo
     }
 }
 
-fn set_session_volume(session_control: &IAudioSessionControl2, volume: f32) -> Result<(), Box<dyn std::error::Error>> {
+pub fn set_session_volume(session_control: &IAudioSessionControl2, volume: f32) -> Result<(), Box<dyn std::error::Error>> {
     unsafe {
         // Get the simple audio volume interface from the session control
         let simple_audio_volume: ISimpleAudioVolume = session_control.cast()?;
